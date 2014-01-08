@@ -17,33 +17,7 @@ namespace Compiler
 
     class LineParser : public Parser
     {
-            enum State
-            {
-                BeginState,
-                ShortState, LongState, FloatState,
-                SetState, SetLocalVarState, SetGlobalVarState, SetPotentialMemberVarState,
-                SetMemberVarState, SetMemberVarState2,
-                MessageState, MessageCommaState, MessageButtonState, MessageButtonCommaState,
-                EndState,
-                PotentialExplicitState, ExplicitState, MemberState
-            };
-
-            Locals& mLocals;
-            Literals& mLiterals;
-            std::vector<Interpreter::Type_Code>& mCode;
-            State mState;
-            std::string mName;
-            std::string mMemberName;
-            int mButtons;
-            std::string mExplicit;
-            char mType;
-            ExprParser mExprParser;
-            bool mAllowExpression;
-
-            void parseExpression (Scanner& scanner, const TokenLoc& loc);
-
         public:
-
             LineParser (ErrorHandler& errorHandler, Context& context, Locals& locals,
                 Literals& literals, std::vector<Interpreter::Type_Code>& code,
                 bool allowExpression = false);
@@ -73,6 +47,36 @@ namespace Compiler
 
             void reset();
             ///< Reset parser to clean state.
+
+        protected:
+            enum State
+            {
+                BeginState,
+                ShortState, LongState, FloatState,
+                SetState, SetLocalVarState, SetGlobalVarState, SetPotentialMemberVarState,
+                SetMemberVarState, SetMemberVarState2,
+                MessageState, MessageCommaState, MessageButtonState, MessageButtonCommaState,
+                EndState,
+                PotentialExplicitState, ExplicitState, MemberState
+            };
+
+            State getState() const;
+            ///< Returns current parser state.
+
+        private:
+            Locals& mLocals;
+            Literals& mLiterals;
+            std::vector<Interpreter::Type_Code>& mCode;
+            State mState;
+            std::string mName;
+            std::string mMemberName;
+            int mButtons;
+            std::string mExplicit;
+            char mType;
+            ExprParser mExprParser;
+            bool mAllowExpression;
+
+            void parseExpression (Scanner& scanner, const TokenLoc& loc);
     };
 }
 

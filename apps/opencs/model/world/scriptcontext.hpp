@@ -33,6 +33,9 @@ namespace CSMWorld
             ///< Does \a name match an ID, that can be referenced?
 
             void invalidateIds();
+
+        private:
+            void ensureIdsUpdated() const;
     };
 }
 

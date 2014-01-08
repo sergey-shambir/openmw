@@ -448,4 +448,9 @@ namespace Compiler
         mName.clear();
         mExplicit.clear();
     }
+
+    LineParser::State LineParser::getState() const
+    {
+        return mState;
+    }
 }

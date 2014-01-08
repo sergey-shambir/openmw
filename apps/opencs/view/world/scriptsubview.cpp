@@ -12,6 +12,7 @@
 #include "../../model/world/commands.hpp"
 #include "../../model/world/idtable.hpp"
 
+#include "scripttextedit.hpp"
 #include "scripthighlighter.hpp"
 
 CSVWorld::ScriptSubView::ChangeLock::ChangeLock (ScriptSubView& view) : mView (view)
@@ -27,12 +28,16 @@ CSVWorld::ScriptSubView::ChangeLock::~ChangeLock()
 CSVWorld::ScriptSubView::ScriptSubView (const CSMWorld::UniversalId& id, CSMDoc::Document& document)
 : SubView (id), mDocument (document), mColumn (-1), mChangeLocked (0)
 {
-    setWidget (mEditor = new QTextEdit (this));
+    setWidget (mEditor = new ScriptTextEdit (this, document.getData()));
 
     mEditor->setAcceptRichText (false);
     mEditor->setLineWrapMode (QTextEdit::NoWrap);
-    mEditor->setTabStopWidth (4);
     mEditor->setUndoRedoEnabled (false); // we use OpenCS-wide undo/redo instead
+
+    QFont monoFont(QLatin1String("Monospace"), 11);
+    QFontMetrics metrics(monoFont);
+    mEditor->setTabStopWidth (4 * metrics.averageCharWidth());
+    mEditor->setFont(monoFont);
 
     mModel = &dynamic_cast<CSMWorld::IdTable&> (
         *document.getData().getTableModel (CSMWorld::UniversalId::Type_Scripts));
